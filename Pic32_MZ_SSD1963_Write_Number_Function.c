@@ -1,7 +1,7 @@
                                                   /*Anyone is free to copy, modify, publish, use, compile or
                                                     distribute this software, either in source code form or as a compiled
                                                     binary, for non-commercial use only. (i.e. YOU MAY NOT SELL IT)
-                                                    John B 10/06/2021
+                                                    John B 30/06/2021
 
                                                     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
                                                     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
@@ -902,18 +902,6 @@ const unsigned short Number_Font[] = {   //bloody huge
         };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 //GLCD FontName : Curlz_MT24x33
 //GLCD FontSize : 24 x 33
 
@@ -930,8 +918,6 @@ const unsigned short Number_Fontgreat[] = {  //99 bytes    rename!              
    0x00,0xFE,0x00,0xC0,0xC3,0x03,0xE0,0x00,0x07,0x70,0x00,0x0E,0x78,0xF0,0x1C,0x3C,0xF8,0x1D,0x3C,0xCC,0x1D,0x3C,0x0C,0x1C,0x3C,0x1C,0x0F,0x3C,0xF8,0x07,0x3C,0xF0,0x03,0x78,0xC0,0x01,0x70,0xE0,0x00,0xE0,0x60,0x00,0xC0,0x31,0x00,0x80,0x1B,0x00,0x00,0x0E,0x00,0x00,0x3F,0x00,0x80,0xF3,0x00,0xC0,0xE1,0x03,0xE0,0xC0,0x07,0xF0,0x80,0x0F,0x70,0x00,0x0F,0x78,0x00,0x1E,0x78,0x00,0x1E,0x78,0x00,0x1E,0x78,0x00,0x1E,0x78,0x00,0x1E,0xF0,0x00,0x0E,0xF0,0x00,0x07,0xE0,0x81,0x07,0x80,0xC7,0x01,0x00,0x7E,0x00, // Code for char num 56
    0x00,0x00,0x00,0x00,0x3F,0x00,0xC0,0xE3,0x00,0xE0,0xC1,0x03,0xF0,0x80,0x07,0x78,0x00,0x0F,0x78,0x00,0x0F,0x7C,0x00,0x1E,0x3C,0x00,0x1E,0x3E,0x00,0x3E,0x3E,0x00,0x3C,0x3E,0x00,0x7C,0x3E,0xF0,0x7C,0x3E,0xF8,0x7C,0x3E,0xCC,0x7D,0x7C,0x8C,0x7D,0x7C,0x8C,0x7D,0xF8,0x9C,0x7D,0xF0,0xC1,0x7C,0xC0,0x63,0x7C,0x00,0x3F,0x3C,0x00,0x00,0x3E,0x00,0x00,0x3E,0x00,0x00,0x1E,0x00,0x00,0x1E,0x00,0x00,0x0F,0x00,0x00,0x0F,0xE0,0x80,0x07,0x70,0x80,0x03,0x70,0xC0,0x03,0xF0,0xE0,0x01,0xE0,0x71,0x00,0x80,0x1F,0x00 // Code for char num 57
         };
-
-
 
 
 //GLCD FontName : San_Diego36x46
@@ -1556,11 +1542,11 @@ unsigned char years2;
 
 unsigned int Background_Colour;
 
-Clear_Screen_SSD1963(unsigned char colour){
+Clear_Screen_SSD1963(unsigned int Colour){
 
      static unsigned long i;
      TFT_CS = 0;
-     Background_Colour = 0x00 | colour;
+     Background_Colour = 0x00 | Colour;
 
      Write_Command_SSD1963(0x2A); //Set Column Address 800
      Write_Data_SSD1963(0x00);
@@ -1578,7 +1564,7 @@ Clear_Screen_SSD1963(unsigned char colour){
 
      Write_Data_SSD1963(0x2C);
 
-    switch (colour)  {
+    switch (Colour)  {
 
      case 0:     for(i=0;i<384480;i++){
                  Black_Out;
@@ -1626,7 +1612,7 @@ Clear_Screen_SSD1963(unsigned char colour){
                  Beige_Out;
                  } break;
      default:    for(i=0;i<3844480;i++){
-                 Baby_Powder_Out;
+                 Write_Data_SSD1963(Colour);
                  } break;
     }
 
@@ -1640,10 +1626,10 @@ Clear_Screen_SSD1963(unsigned char colour){
 
 
 
-    unsigned int Pixel;
+unsigned int Pixel;
 Get_Pixel_Colour(unsigned int Colour){
 
-      switch (colour)  {
+      switch (Colour)  {
 
      case 0:     Pixel = 0x00;
                  break;
@@ -1713,7 +1699,6 @@ Get_Pixel_Colour(unsigned int Colour){
                  break;
      default:    break;
     }
-
    // return Pixel;
    // return Background_Colour;
 
@@ -1798,14 +1783,14 @@ void Write_Number_Nine(unsigned int X_Position, unsigned int Y_Position, unsigne
 
           dataout = Number_Font[jj] &i;
 
-         if (dataout >=1){
+         if (dataout){
 
           Write_Data_SSD1963(Pixel);
          } else  { Write_Data_SSD1963(Background_Colour);  }
 
           i=i<<1;
 
-          if (i>=256){
+          if (i>128){
                i=1;}
          }
      }
@@ -1833,14 +1818,14 @@ void Write_Number_Eight(unsigned int X_Position, unsigned int Y_Position, unsign
 
           dataout = Number_Font[jj] &i;
 
-         if (dataout >=1){
+         if (dataout){
 
           Write_Data_SSD1963(Pixel);
          } else  { Write_Data_SSD1963(Background_Colour);  }
 
           i=i<<1;
 
-          if (i>=256){
+          if (i>128){
                i=1;}
          }
      }
@@ -1866,14 +1851,14 @@ void Write_Number_Seven(unsigned int X_Position, unsigned int Y_Position, unsign
 
           dataout = Number_Font[jj] &i;
 
-         if (dataout >=1){
+         if (dataout){
 
           Write_Data_SSD1963(Pixel);
          } else  { Write_Data_SSD1963(Background_Colour);  }
 
           i=i<<1;
 
-          if (i>=256){
+          if (i>128){
                i=1;}
          }
      }
@@ -1901,14 +1886,14 @@ void Write_Number_Six(unsigned int X_Position, unsigned int Y_Position, unsigned
 
           dataout = Number_Font[jj] &i;
 
-         if (dataout >=1){
+         if (dataout){
 
           Write_Data_SSD1963(Pixel);
          } else  { Write_Data_SSD1963(Background_Colour);  }
 
           i=i<<1;
 
-          if (i>=256){
+          if (i>128){
                i=1;}
          }
      }
@@ -1934,14 +1919,14 @@ void Write_Number_Five(unsigned int X_Position, unsigned int Y_Position, unsigne
 
           dataout = Number_Font[jj] &i;
 
-         if (dataout >=1){
+         if (dataout){
 
           Write_Data_SSD1963(Pixel);
          } else  { Write_Data_SSD1963(Background_Colour);  }
 
           i=i<<1;
 
-          if (i>=256){
+          if (i>128){
                i=1;}
          }
      }
@@ -1968,14 +1953,14 @@ void Write_Number_Four(unsigned int X_Position, unsigned int Y_Position, unsigne
 
           dataout = Number_Font[jj] &i;
 
-         if (dataout >=1){
+         if (dataout){
 
           Write_Data_SSD1963(Pixel);
          } else  { Write_Data_SSD1963(Background_Colour);  }
 
           i=i<<1;
 
-          if (i>=256){
+          if (i>128){
                i=1;}
          }
      }
@@ -2002,14 +1987,14 @@ void Write_Number_Three(unsigned int X_Position, unsigned int Y_Position, unsign
 
           dataout = Number_Font[jj] &i;
 
-         if (dataout >=1){
+         if (dataout){
 
           Write_Data_SSD1963(Pixel);
          } else  { Write_Data_SSD1963(Background_Colour);  }
 
           i=i<<1;
 
-          if (i>=256){
+          if (i>128){
                i=1;}
          }
      }
@@ -2035,14 +2020,14 @@ void Write_Number_Two(unsigned int X_Position, unsigned int Y_Position, unsigned
 
           dataout = Number_Font[jj] &i;
 
-         if (dataout >=1){
+         if (dataout){
 
           Write_Data_SSD1963(Pixel);
          } else  { Write_Data_SSD1963(Background_Colour);  }
 
           i=i<<1;
 
-          if (i>=256){
+          if (i>128){
                i=1;}
          }
      }
@@ -2069,13 +2054,13 @@ void Write_Number_One(unsigned int X_Position, unsigned int Y_Position, unsigned
 
           dataout = Number_Font[jj] &i;
 
-         if (dataout >=1){
+         if (dataout){
           Write_Data_SSD1963(Pixel);
          } else  { Write_Data_SSD1963(Background_Colour);  }// Space
 
           i=i<<1;
 
-          if (i>=256){
+          if (i>128){
                i=1;}
          }
      }
@@ -2108,7 +2093,7 @@ void Write_Number_Zero(unsigned int X_Position, unsigned int Y_Position, unsigne
 
           i=i<<1;
 
-          if (i>=256){
+          if (i>128){
                i=1;}
          }
      }
@@ -3035,7 +3020,6 @@ void Set_Bus_Speeds(){
     PRECONbits.PFMWS = 0b010; // PFM Access Time Defined in Terms of SYSCLK Wait States (Two wait states)
 
     SYSKEY = 0x00;
-
     // Setup SRS registers
     PRISS = 0x76543210;                /* assign shadow set #7-#1 to priority level #7-#1 ISRs */
 
@@ -3043,7 +3027,10 @@ void Set_Bus_Speeds(){
 
 
 
-
+ //THERE IS A VIDEO ON MY YOUTUBE CHANNEL SHOWING HOW TO CHANGE THE FONT TO ANY TYPE YOU LIKE.
+ //THIS C FILE IS SHOWING A MASSIVE FONT WITH NO NEED TO BLANK ANY CHARACTERS.
+ //DELETE THE PARTS YOU DON'T NEED.
+ //THIS IS FOR AN SSD1963 5" SCREEN
 
 void main(){
 
@@ -3054,7 +3041,7 @@ void main(){
       unsigned long x = 0;
       unsigned int xpos = 0;
       unsigned int ypos = 10;
-   //   Set_Bus_Speeds();
+      Set_Bus_Speeds();
       Init_MCU();
 
       Init_16Bit_PMP();
@@ -3068,12 +3055,12 @@ void main(){
 
       Write_Time();
 
-       Clear_Screen_SSD1963(Blue);   // over 71 minutes waiting for debug clock
+      Clear_Screen_SSD1963(Blue);   // over 71 minutes waiting for debug clock
 
 
-      // xpos +=  Number_Font_Width + Number_Font_Spacing;
+     /*xpos +=  Number_Font_Width + Number_Font_Spacing;   BELOW IS FOR SMALLER FONT
 
-     /*Write_Number_Zero(xpos,ypos,Red);
+       Write_Number_Zero(xpos,ypos,Red);
        Write_Number_One(xpos*2,ypos,Lime);
        Write_Number_Two(xpos*3,ypos,Magenta);
        Write_Number_Three(xpos*4,ypos,Yellow);
@@ -3091,45 +3078,33 @@ void main(){
   while(1){
 
                 while (HALFSEC_bit && once){
-
-
                 LATA1_bit = 0;
                 Once = 0;
                 Write_Pacman(50,180,Yellow);
                 //  x = Rand();
-
-
                 }
-
-
 
 
                 while (HALFSEC_bit !=1 && once==0){
                 Once = 1;
                  Get_Time();
                  LATA1_bit = 1;
-                    Write_Pacman2(50,180,Yellow);     //3.4ms
-
-                    x++;
-
+                 Write_Pacman2(50,180,Yellow);     //3.4ms
+                 x++;
                 }
-
-
 
                 Write_Number(seconds10s,200,140,Yellow);
                 Write_Number(seconds1s,350,140,Yellow);
 
-              //   Write_Number(x,200,140,Lime);
+             //   Write_Number(x,200,140,Lime);
 
-              /*Write_Number_Bit(DoneOne,200,350,Red);
+              /*Write_Number_Bit(DoneOne,200,350,Red);  //  WRITE NUMBER BIT FOR SMALLER FONT.
 
                Write_Number_Bit(DoneTwo,240,350,Red);
 
                Write_Number_Bit(DoneThree,280,350,Red);
 
                Write_Number_Bit(DoneFour,320,350,Red);*/
-
-
 
   }
 
